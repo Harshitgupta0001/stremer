@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Study Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0f14;--bg2:#13161e;--bg3:#1a1e28;--bg4:#222738;--b:rgba(255,255,255,.07);--b2:rgba(255,255,255,.14);--t:#f0f2f8;--t2:#8b90a7;--t3:#555a72;--ac:#4f7fff;--ac2:#6b9fff;--acbg:rgba(79,127,255,.1);--acbd:rgba(79,127,255,.3);--red:#ff5f5f;--rbg:rgba(255,95,95,.1);--gr:#4ade80;--gbg:rgba(74,222,128,.1);--ye:#fbbf24;--ybg:rgba(251,191,36,.1);--r:10px;--rl:14px;--f:'Sora',sans-serif;--m:'JetBrains Mono',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--t);font-family:var(--f);font-size:14px;line-height:1.6;overflow:hidden}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:10px}
+/* APP */
+.app{display:flex;flex-direction:column;height:100vh}
+/* TOPBAR */
+.topbar{display:flex;align-items:center;gap:12px;padding:0 20px;height:54px;background:var(--bg2);border-bottom:1px solid var(--b);flex-shrink:0}
+.logo{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700}
+.logo-i{width:30px;height:30px;border-radius:8px;background:var(--ac);display:flex;align-items:center;justify-content:center;font-size:16px}
+.pill{display:flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500;border:1px solid var(--b);margin-left:8px}
+.pill.ok{background:var(--gbg);border-color:rgba(74,222,128,.3);color:var(--gr)}
+.pill.no{background:var(--rbg);border-color:rgba(255,95,95,.3);color:var(--red)}
+.pill.scan{background:var(--ybg);border-color:rgba(251,191,36,.3);color:var(--ye)}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.topbar-r{margin-left:auto;display:flex;gap:8px;align-items:center}
+.sbox{position:relative}
+.sbox input{height:30px;padding:0 10px 0 30px;border-radius:7px;border:1px solid var(--b);background:var(--bg3);color:var(--t);font-family:var(--f);font-size:12px;width:190px;outline:none;transition:.15s}
+.sbox input:focus{border-color:var(--acbd)}
+.sbox svg{position:absolute;left:8px;top:50%;transform:translateY(-50%);pointer-events:none;opacity:.4}
+/* TABS */
+.tabs{display:flex;padding:0 20px;background:var(--bg2);border-bottom:1px solid var(--b);flex-shrink:0}
+.tab{padding:11px 15px;font-size:13px;cursor:pointer;color:var(--t3);border-bottom:2px solid transparent;margin-bottom:-1px;transition:.12s;user-select:none}
+.tab:hover{color:var(--t2)}
+.tab.active{color:var(--ac2);border-bottom-color:var(--ac)}
+/* BODY */
+.body{display:flex;flex:1;overflow:hidden}
+/* SIDEBAR */
+.sb{width:230px;background:var(--bg2);border-right:1px solid var(--b);display:flex;flex-direction:column;flex-shrink:0}
+.sbh{padding:14px 14px 8px;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--t3)}
+.sbscroll{flex:1;overflow-y:auto;padding:4px 7px 12px}
+.chi{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:var(--r);cursor:pointer;transition:.12s;margin-bottom:2px;border:1px solid transparent}
+.chi:hover{background:var(--bg3)}
+.chi.active{background:var(--acbg);border-color:var(--acbd)}
+.cha{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;background:var(--bg3)}
+.chi.active .chn{color:var(--ac2)}
+.chn{font-size:13px;font-weight:500;color:var(--t);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chc{font-size:10px;color:var(--t3)}
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.bbar{padding:9px 18px;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--b);background:var(--bg2);flex-shrink:0;font-size:12px;color:var(--t3)}
+.bbar .cur{color:var(--t);font-weight:500}
+.bbar span:not(.cur){cursor:pointer}.bbar span:not(.cur):hover{color:var(--t)}
+.vo{margin-left:auto;display:flex;gap:3px}
+.vb{width:27px;height:27px;border-radius:7px;border:1px solid var(--b);background:transparent;color:var(--t3);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.12s}
+.vb:hover,.vb.active{background:var(--bg4);color:var(--t)}
+.ca{flex:1;overflow-y:auto;padding:18px}
+/* EMPTY */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:10px;text-align:center;padding:40px}
+.eico{width:60px;height:60px;border-radius:16px;background:var(--bg3);border:1px solid var(--b);display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:4px}
+.empty h3{font-size:15px;font-weight:600}
+.empty p{font-size:12px;color:var(--t2);max-width:320px;line-height:1.7}
+/* SETUP */
+.sw{max-width:540px;margin:0 auto;padding:20px}
+.sc{background:var(--bg2);border:1px solid var(--b);border-radius:var(--rl);padding:20px;margin-bottom:14px}
+.sc h3{font-size:14px;font-weight:600;margin-bottom:6px}
+.sc p{font-size:12px;color:var(--t2);margin-bottom:14px;line-height:1.7}
+.sc p:last-child{margin-bottom:0}
+.fl{display:block;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--t3);margin-bottom:5px}
+.fi{width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--b);background:var(--bg3);color:var(--t);font-family:var(--f);font-size:13px;outline:none;transition:.15s}
+.fi:focus{border-color:var(--acbd)}
+.fi::placeholder{color:var(--t3)}
+.fg{margin-bottom:12px}
+.btn{height:36px;padding:0 16px;border-radius:8px;border:1px solid var(--b);background:transparent;color:var(--t);font-family:var(--f);font-size:13px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.15s}
+.btn:hover{background:var(--bg4)}
+.btn.acc{background:var(--ac);border-color:var(--ac);color:#fff}
+.btn.acc:hover{opacity:.88}
+.btn.sm{height:28px;padding:0 11px;font-size:12px;border-radius:7px}
+.btn.ye{background:var(--ybg);border-color:rgba(251,191,36,.4);color:var(--ye)}
+.msg{margin-top:9px;font-size:12px;padding:7px 11px;border-radius:7px;display:none}
+.msg.ok{display:block;background:var(--gbg);color:var(--gr);border:1px solid rgba(74,222,128,.25)}
+.msg.er{display:block;background:var(--rbg);color:var(--red);border:1px solid rgba(255,95,95,.25)}
+.msg.in{display:block;background:var(--acbg);color:var(--ac2);border:1px solid var(--acbd)}
+.step{display:flex;gap:11px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--b)}
+.step:last-child{border:none;margin:0;padding:0}
+.stn{width:22px;height:22px;border-radius:50%;background:var(--ac);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.stx{font-size:12px;color:var(--t2);line-height:1.7}
+.stx b{color:var(--t)}
+.stx code{font-family:var(--m);font-size:11px;background:var(--bg4);padding:1px 5px;border-radius:4px;color:var(--ac2)}
+/* FOLDERS */
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:11px}
+.fc{background:var(--bg2);border:1px solid var(--b);border-radius:var(--rl);padding:16px 13px 13px;cursor:pointer;transition:.15s}
+.fc:hover{border-color:var(--b2);transform:translateY(-1px)}
+.fci{font-size:28px;margin-bottom:8px}
+.fcn{font-size:13px;font-weight:600;color:var(--t);margin-bottom:3px}
+.fcm{font-size:11px;color:var(--t3)}
+.fbar{height:2px;background:var(--bg4);border-radius:2px;margin-top:9px}
+.fprog{height:100%;background:var(--ac);border-radius:2px}
+/* FILE CARDS */
+.file-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:11px}
+.fcard{background:var(--bg2);border:1px solid var(--b);border-radius:var(--rl);cursor:pointer;transition:.15s;overflow:hidden}
+.fcard:hover{border-color:var(--b2);transform:translateY(-1px)}
+.fth{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;position:relative;font-size:30px}
+.fth.video{background:linear-gradient(135deg,#0d1a33,#1a2a4d)}
+.fth.pdf{background:linear-gradient(135deg,#1f0d0d,#2d1212)}
+.stag{position:absolute;top:7px;left:7px;background:rgba(0,0,0,.75);color:#fff;font-size:9px;font-weight:600;font-family:var(--m);padding:2px 6px;border-radius:4px}
+.dtag{position:absolute;bottom:6px;right:6px;background:var(--gr);color:#000;font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px}
+.fb{padding:9px 11px 11px}
+.fn{font-size:12px;font-weight:600;color:var(--t);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fm{font-size:10px;color:var(--t3);display:flex;gap:7px;flex-wrap:wrap}
+.tb2{padding:1px 6px;border-radius:4px;font-size:10px;font-weight:600}
+.tb2.video{background:var(--acbg);color:var(--ac2)}
+.tb2.pdf{background:var(--rbg);color:var(--red)}
+/* FILE LIST */
+.fli{display:flex;align-items:center;gap:11px;padding:9px 13px;background:var(--bg2);border:1px solid var(--b);border-radius:var(--r);cursor:pointer;transition:.12s;margin-bottom:7px}
+.fli:hover{border-color:var(--b2);background:var(--bg3)}
+.flico{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px}
+.flico.video{background:var(--acbg)}
+.flico.pdf{background:var(--rbg)}
+.flinf{flex:1;min-width:0}
+.fln{font-size:13px;font-weight:500;color:var(--t);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.flm{font-size:11px;color:var(--t3)}
+.flact{display:flex;gap:5px}
+.ib{width:28px;height:28px;border-radius:7px;border:1px solid var(--b);background:transparent;color:var(--t3);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.12s;font-size:14px}
+.ib:hover{background:var(--bg4);color:var(--t)}
+/* MODAL */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:.2s}
+.ov.open{opacity:1;pointer-events:all}
+.modal{background:var(--bg2);border:1px solid var(--b2);border-radius:var(--rl);width:100%;max-width:900px;max-height:94vh;display:flex;flex-direction:column;transform:scale(.97);transition:.2s;overflow:hidden}
+.ov.open .modal{transform:scale(1)}
+.mh{display:flex;align-items:center;gap:7px;padding:11px 15px;border-bottom:1px solid var(--b);flex-shrink:0}
+.mt{flex:1;font-size:13px;font-weight:600;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mbody{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:200px}
+.vwrap video{width:100%;display:block;max-height:70vh;background:#000}
+.pwrap{flex:1;display:flex;flex-direction:column}
+.pwrap iframe{flex:1;border:none;min-height:540px}
+.mfoot{padding:9px 15px;border-top:1px solid var(--b);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.mfm{font-size:12px;color:var(--t3);flex:1}
+/* PROGRESS */
+.pcrd{background:var(--bg2);border:1px solid var(--b);border-radius:var(--rl);padding:16px;margin-bottom:12px}
+.pcrd h4{font-size:13px;font-weight:600;margin-bottom:10px}
+.pr{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+.prl{font-size:12px;color:var(--t2);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prpct{font-size:11px;font-family:var(--m);color:var(--ac2);min-width:32px;text-align:right}
+.prt{flex:2;height:4px;background:var(--bg4);border-radius:3px;overflow:hidden}
+.prf{height:100%;background:var(--ac);border-radius:3px}
+.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:18px}
+.st{background:var(--bg2);border:1px solid var(--b);border-radius:var(--r);padding:13px;text-align:center}
+.sv{font-size:22px;font-weight:700;color:var(--ac2);font-family:var(--m)}
+.sl{font-size:11px;color:var(--t3);margin-top:2px}
+/* LOADER */
+.lb{height:2px;background:var(--bg3);flex-shrink:0}
+.lb .lp{height:100%;background:var(--ac);width:0}
+.lb.on .lp{animation:lp 1.4s ease-in-out infinite}
+@keyframes lp{0%{width:0;margin-left:0}50%{width:55%;margin-left:22%}100%{width:0;margin-left:100%}}
+.spin{width:18px;height:18px;border:2px solid var(--b);border-top-color:var(--ac);border-radius:50%;animation:sp .7s linear infinite;display:inline-block}
+@keyframes sp{to{transform:rotate(360deg)}}
+.note{padding:9px 13px;background:var(--acbg);border:1px solid var(--acbd);border-radius:var(--r);font-size:12px;color:var(--ac2);line-height:1.7}
+.warn{padding:9px 13px;background:var(--ybg);border:1px solid rgba(251,191,36,.3);border-radius:var(--r);font-size:12px;color:var(--ye);line-height:1.7}
+</style>
+</head>
+<body>
+<div class="app">
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo"><div class="logo-i">📚</div>Study Portal</div>
+  <div class="pill no" id="botPill"><div class="dot"></div><span id="botLbl">Checking...</span></div>
+  <div class="topbar-r">
+    <div class="sbox">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input id="searchInput" placeholder="Search files..." oninput="doSearch(this.value)">
+    </div>
+  </div>
+</div>
+<div class="lb" id="lb"><div class="lp"></div></div>
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="openTab('browse',this)">🏠 Browse</div>
+  <div class="tab" onclick="openTab('setup',this)">⚙️ Setup</div>
+  <div class="tab" onclick="openTab('progress',this)">📊 Progress</div>
+</div>
+<div class="body">
+  <!-- SIDEBAR -->
+  <div class="sb">
+    <div class="sbh">Channels</div>
+    <div class="sbscroll" id="clist"><div style="text-align:center;padding:28px 12px;color:var(--t3);font-size:12px">Scan karo pehle</div></div>
+  </div>
+  <div class="main">
+    <!-- BROWSE -->
+    <div id="tb-browse" style="display:flex;flex-direction:column;flex:1;overflow:hidden">
+      <div class="bbar">
+        <span onclick="goRoot()">Home</span>
+        <span id="bsep1" style="display:none">›</span><span id="bc1" style="display:none" onclick="goRoot()"></span>
+        <span id="bsep2" style="display:none">›</span><span class="cur" id="bc2" style="display:none"></span>
+        <div class="vo">
+          <button class="vb active" id="vg" onclick="sv('grid',this)">▦</button>
+          <button class="vb" id="vl" onclick="sv('list',this)">☰</button>
+        </div>
+      </div>
+      <div class="ca" id="browseContent">
+        <div class="empty">
+          <div class="eico">📡</div>
+          <h3>Index Load Ho Raha Hai...</h3>
+          <p>Agar khaali hai toh Setup tab mein jaake "Scan Channels" karo.</p>
+        </div>
+      </div>
+    </div>
+    <!-- SETUP -->
+    <div id="tb-setup" style="display:none;overflow-y:auto;flex:1">
+      <div class="sw">
+        <div class="sc" id="statusCard">
+          <h3>🔌 Server Status</h3>
+          <p id="statusText">Checking...</p>
+        </div>
+        <div class="sc">
+          <h3>🔄 Channels Scan Karo</h3>
+          <p>Yahan channels daalo aur scan karo — index.json mein save ho jayega. Ek baar scan karo, baar baar nahi karna.</p>
+          <div class="fg">
+            <label class="fl">Channel IDs / Usernames (ek per line)</label>
+            <textarea class="fi" id="scanChannels" rows="4" placeholder="@mychannel&#10;-1001234567890&#10;@another" style="resize:vertical"></textarea>
+          </div>
+          <div class="fg">
+            <label class="fl">Folder Keywords (optional, comma separated)</label>
+            <input class="fi" id="scanKw" placeholder="Physics, Maths, Chemistry, Biology">
+          </div>
+          <div style="display:flex;gap:9px;flex-wrap:wrap">
+            <button class="btn acc" onclick="scanChannels()">🔍 Scan Channels</button>
+            <button class="btn" onclick="loadIndex()">🔄 Refresh Index</button>
+          </div>
+          <div id="scanMsg" class="msg"></div>
+        </div>
+        <div class="sc">
+          <h3>📖 API Credentials Kahan Se Milenge</h3>
+          <p>Render/Koyeb par yeh 4 Environment Variables set karo:</p>
+          <div class="step"><div class="stn">1</div><div class="stx"><b>API_ID &amp; API_HASH:</b> <a href="https://my.telegram.org" target="_blank" style="color:var(--ac2)">my.telegram.org</a> par jaao → "API Development Tools" → App banao → ID aur Hash milega</div></div>
+          <div class="step"><div class="stn">2</div><div class="stx"><b>BOT_TOKEN:</b> <b>@BotFather</b> se <code>/newbot</code> → Token copy karo → Bot ko channel ka Admin banao</div></div>
+          <div class="step"><div class="stn">3</div><div class="stx"><b>CHANNELS:</b> <code>@chan1,@chan2,-1001234567890</code> format mein sab channels comma se alag karo</div></div>
+          <div class="step"><div class="stn">4</div><div class="stx">Deploy karo → Site par aao → Scan Channels dabao → Index ban jayega!</div></div>
+        </div>
+      </div>
+    </div>
+    <!-- PROGRESS -->
+    <div id="tb-progress" style="display:none;overflow-y:auto;flex:1">
+      <div class="ca" id="progressContent"><div class="empty"><div class="eico">📊</div><h3>Koi Progress Nahi</h3><p>Files open karo tab track hoga.</p></div></div>
+    </div>
+  </div>
+</div>
+<!-- MODAL -->
+<div class="ov" id="ov" onclick="closeMod(event)">
+  <div class="modal">
+    <div class="mh">
+      <span id="mico" style="font-size:15px;margin-right:2px"></span>
+      <div class="mt" id="mtitle">File</div>
+      <button class="ib" onclick="prevF()" id="prevBtn">‹</button>
+      <button class="ib" onclick="nextF()" id="nextBtn">›</button>
+      <button class="ib" onclick="dlCur()" title="Download">⬇</button>
+      <button class="ib" onclick="closeMod(null,true)">✕</button>
+    </div>
+    <div class="mbody" id="mbody"></div>
+    <div class="mfoot">
+      <div class="mfm" id="mmeta"></div>
+      <button class="btn sm" onclick="markDone()" id="mdBtn">○ Mark Done</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+const BASE = window.location.origin;
+const S = {channels:[],aci:-1,afi:-1,vm:'grid',prog:{},curFiles:[],curIdx:-1};
+const $ = id => document.getElementById(id);
+
+// ── UTILS ──
+function fk(ci,fi,i){return`${ci}_${fi}_${i}`}
+function showMsg(id,t,c){const e=$(id);e.textContent=t;e.className='msg '+c}
+function setLd(on){$('lb').classList.toggle('on',on)}
+function saveProg(){try{localStorage.setItem('sp_prog',JSON.stringify(S.prog))}catch(e){}}
+function loadProg(){try{const d=localStorage.getItem('sp_prog');if(d)S.prog=JSON.parse(d)}catch(e){}}
+
+// ── TABS ──
+function openTab(name,el){
+  ['browse','setup','progress'].forEach(t=>{const e=$('tb-'+t);e.style.display='none'});
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  const te=$('tb-'+name);
+  te.style.display=name==='browse'?'flex':'block';
+  if(name==='browse'){te.style.flexDirection='column';te.style.flex='1'}
+  el.classList.add('active');
+  if(name==='progress')renderProg();
+}
+
+// ── STATUS CHECK ──
+async function checkStatus(){
+  try{
+    const r=await fetch(`${BASE}/api/status`);
+    const d=await r.json();
+    const p=$('botPill');
+    if(d.ok){
+      p.className='pill ok';
+      $('botLbl').textContent=`${d.bot} · ${d.indexed} files`;
+      $('statusCard').innerHTML=`<h3>✅ Server Ready</h3><p style="color:var(--t2);margin-bottom:0">Bot: <b style="color:var(--t)">${d.bot}</b> · Indexed files: <b style="color:var(--ac2)">${d.indexed}</b> · Channels: ${d.channels} · Last scan: ${d.last_updated?new Date(d.last_updated).toLocaleString():'Never'}</p>`;
+    }else{
+      p.className='pill no';$('botLbl').textContent='Bot Error';
+      $('statusCard').innerHTML=`<h3>❌ Bot Error</h3><p style="color:var(--red)">${d.error}</p><p style="color:var(--t2)">API_ID, API_HASH, BOT_TOKEN env vars check karo.</p>`;
+    }
+  }catch(e){
+    $('botPill').className='pill no';$('botLbl').textContent='Server Error';
+  }
+}
+
+// ── LOAD INDEX ──
+async function loadIndex(){
+  setLd(true);
+  try{
+    const r=await fetch(`${BASE}/api/index`);
+    const d=await r.json();
+    S.channels=d.channels||[];
+    renderSB();
+    if(S.channels.length&&S.channels[0].folders.length){
+      renderFolders(0);
+    }
+  }catch(e){
+    $('browseContent').innerHTML='<div class="empty"><div class="eico">❌</div><h3>Index load nahi hua</h3><p>Server check karo.</p></div>';
+  }
+  setLd(false);
+}
+
+// ── SCAN ──
+async function scanChannels(){
+  const raw=$('scanChannels').value.trim();
+  const kws=$('scanKw').value.split(',').map(s=>s.trim()).filter(Boolean);
+  const channels=raw.split(/[\n,]+/).map(s=>s.trim()).filter(Boolean);
+  if(!channels.length){showMsg('scanMsg','Koi channel nahi diya','er');return}
+  showMsg('scanMsg',`${channels.length} channel(s) scan ho raha hai... (1-2 min lag sakte hain)`,'in');
+  setLd(true);
+  try{
+    const r=await fetch(`${BASE}/api/scan`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({channels,keywords:kws})
+    });
+    const d=await r.json();
+    S.channels=d.channels||[];
+    const total=S.channels.reduce((a,ch)=>a+ch.folders.reduce((b,f)=>b+f.files.length,0),0);
+    showMsg('scanMsg',`✅ Scan complete! ${total} files index ho gayi. Ab Browse tab mein dekho.`,'ok');
+    renderSB();
+    await checkStatus();
+  }catch(e){
+    showMsg('scanMsg','Scan fail hua: '+e.message,'er');
+  }
+  setLd(false);
+}
+
+// ── SIDEBAR ──
+function renderSB(){
+  const el=$('clist');
+  if(!S.channels.length){el.innerHTML='<div style="text-align:center;padding:28px 12px;color:var(--t3);font-size:12px">Scan karo pehle</div>';return}
+  el.innerHTML=S.channels.map((ch,i)=>`
+    <div class="chi ${i===0?'active':''}" onclick="selCh(${i},this)">
+      <div class="cha">${ch.emoji||'📡'}</div>
+      <div><div class="chn">${ch.name}</div><div class="chc">${ch.folders.reduce((a,f)=>a+f.files.length,0)} files</div></div>
+    </div>`).join('');
+  selCh(0,el.querySelector('.chi'));
+}
+
+function selCh(i,el){
+  document.querySelectorAll('.chi').forEach(e=>e.classList.remove('active'));
+  el.classList.add('active');S.aci=i;S.afi=-1;renderFolders(i);
+}
+
+// ── BREADCRUMB ──
+function setBc(a,b){
+  $('bc1').style.display='none';$('bsep1').style.display='none';
+  $('bc2').style.display='none';$('bsep2').style.display='none';
+  if(a){$('bc1').textContent=a;$('bc1').style.display='';$('bsep1').style.display=''}
+  if(b){$('bc2').textContent=b;$('bc2').style.display='';$('bsep2').style.display=''}
+}
+function goRoot(){if(S.aci>=0)renderFolders(S.aci)}
+
+// ── FOLDERS ──
+function renderFolders(ci){
+  const ch=S.channels[ci];setBc(ch.name,'');
+  if(!ch.folders||!ch.folders.length){
+    $('browseContent').innerHTML=`<div class="empty"><div class="eico">📂</div><h3>Koi folder nahi</h3><p>${ch.error||'Is channel mein media nahi mili.'}</p></div>`;return}
+  $('browseContent').innerHTML=`<div class="fgrid">${ch.folders.map((f,i)=>{
+    const t=f.files.length,d=f.files.filter((_,j)=>S.prog[fk(ci,i,j)]?.done).length,p=t?Math.round(d/t*100):0;
+    return`<div class="fc" onclick="selFd(${ci},${i})">
+      <div class="fci">📂</div><div class="fcn">${f.name}</div>
+      <div class="fcm">${t} files · <span style="color:var(--ac2)">▶${f.files.filter(x=>x.type==='video').length}</span> <span style="color:var(--red)">PDF${f.files.filter(x=>x.type==='pdf').length}</span></div>
+      <div class="fbar"><div class="fprog" style="width:${p}%"></div></div>
+      <div style="font-size:10px;color:var(--t3);margin-top:3px">${p}% done</div>
+    </div>`}).join('')}</div>`;
+}
+
+function selFd(ci,fi){S.afi=fi;renderFiles(ci,fi)}
+
+// ── FILES ──
+function renderFiles(ci,fi){
+  const ch=S.channels[ci],fd=ch.folders[fi];
+  setBc(ch.name,fd.name);S.curFiles=fd.files;
+  if(S.vm==='grid'){
+    $('browseContent').innerHTML=`<div class="file-grid">${fd.files.map((f,i)=>{
+      const dk=S.prog[fk(ci,fi,i)]?.done;
+      return`<div class="fcard" onclick="openF(${ci},${fi},${i})">
+        <div class="fth ${f.type}"><div class="stag">#${f.seq}</div>
+          <span>${f.type==='video'?'🎬':'📄'}</span>
+          ${dk?'<div class="dtag">DONE</div>':''}
+        </div>
+        <div class="fb"><div class="fn" title="${f.name}">${f.name}</div>
+          <div class="fm"><span class="tb2 ${f.type}">${f.type.toUpperCase()}</span>${f.size}${f.duration?' · '+f.duration:''}</div>
+        </div></div>`}).join('')}</div>`;
+  }else{
+    $('browseContent').innerHTML=fd.files.map((f,i)=>{
+      const dk=S.prog[fk(ci,fi,i)]?.done;
+      return`<div class="fli" onclick="openF(${ci},${fi},${i})">
+        <div class="flico ${f.type}">${f.type==='video'?'🎬':'📄'}</div>
+        <div class="flinf">
+          <div class="fln"><span style="font-family:var(--m);font-size:10px;color:var(--t3);margin-right:5px">#${f.seq}</span>${f.name}</div>
+          <div class="flm"><span class="tb2 ${f.type}" style="margin-right:5px">${f.type.toUpperCase()}</span>${f.size}${f.duration?' · '+f.duration:''}</div>
+        </div>
+        ${dk?'<span style="color:var(--gr);font-size:12px;margin-right:4px">✓</span>':''}
+        <div class="flact" onclick="event.stopPropagation()">
+          <button class="ib" onclick="dlF(${ci},${fi},${i})" title="Download">⬇</button>
+          <button class="ib" onclick="openF(${ci},${fi},${i})">›</button>
+        </div></div>`}).join('');
+  }
+}
+
+// ── OPEN FILE ──
+let curKey=null;
+async function openF(ci,fi,idx){
+  const f=S.channels[ci].folders[fi].files[idx];
+  const k=fk(ci,fi,idx);curKey=k;
+  S.aci=ci;S.afi=fi;S.curIdx=idx;S.curFiles=S.channels[ci].folders[fi].files;
+  if(!S.prog[k])S.prog[k]={done:false,opens:0};
+  S.prog[k].opens++;saveProg();
+  $('mtitle').textContent=f.name;
+  $('mico').textContent=f.type==='video'?'▶':'📄';
+  $('mmeta').textContent=`${f.type.toUpperCase()} · ${f.size}${f.duration?' · '+f.duration:''}`;
+  $('prevBtn').disabled=idx===0;
+  $('nextBtn').disabled=idx===S.curFiles.length-1;
+  const done=S.prog[k]?.done;
+  $('mdBtn').textContent=done?'✓ Done!':'○ Mark Done';
+  $('mdBtn').style.color=done?'var(--gr)':'';
+  $('mbody').innerHTML='<div style="display:flex;align-items:center;justify-content:center;padding:50px;gap:10px"><div class="spin"></div><span style="color:var(--t3);font-size:13px">Streaming...</span></div>';
+  $('ov').classList.add('open');
+  const url=`${BASE}/stream/${encodeURIComponent(f.file_id)}`;
+  if(f.type==='video'){
+    $('mbody').innerHTML=`<div class="vwrap"><video controls autoplay preload="metadata" style="width:100%;max-height:70vh;background:#000"><source src="${url}" type="video/mp4">Browser video support nahi karta.</video></div>`;
+  }else{
+    $('mbody').innerHTML=`<div class="pwrap"><iframe src="https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodeURIComponent(url)}" style="min-height:540px" title="${f.name}"></iframe></div>`;
+  }
+  f._url=url;
+}
+
+function closeMod(e,force){
+  if(!force&&e&&e.target!==$('ov'))return;
+  $('ov').classList.remove('open');
+  const v=document.querySelector('#mbody video');if(v)v.pause();
+  if(S.aci>=0&&S.afi>=0)renderFiles(S.aci,S.afi);
+}
+function prevF(){if(S.curIdx>0)openF(S.aci,S.afi,S.curIdx-1)}
+function nextF(){if(S.curIdx<S.curFiles.length-1)openF(S.aci,S.afi,S.curIdx+1)}
+function markDone(){
+  if(!curKey)return;
+  if(!S.prog[curKey])S.prog[curKey]={done:false,opens:0};
+  S.prog[curKey].done=!S.prog[curKey].done;
+  const d=S.prog[curKey].done;
+  $('mdBtn').textContent=d?'✓ Done!':'○ Mark Done';
+  $('mdBtn').style.color=d?'var(--gr)':'';
+  saveProg();
+}
+async function dlCur(){if(S.aci<0)return;dlF(S.aci,S.afi,S.curIdx)}
+async function dlF(ci,fi,idx){
+  const f=S.channels[ci].folders[fi].files[idx];
+  const url=f._url||`${BASE}/stream/${encodeURIComponent(f.file_id)}`;
+  const a=document.createElement('a');a.href=url;
+  a.download=f.name+(f.type==='video'?'.mp4':'.pdf');
+  a.target='_blank';a.click();
+}
+
+// ── SEARCH ──
+function doSearch(q){
+  if(!q.trim()){if(S.afi>=0)renderFiles(S.aci,S.afi);else if(S.aci>=0)renderFolders(S.aci);return}
+  const res=[];
+  S.channels.forEach((ch,ci)=>ch.folders.forEach((fd,fi)=>fd.files.forEach((f,i)=>{
+    if(f.name.toLowerCase().includes(q.toLowerCase()))res.push({...f,ci,fi,i,ch:ch.name,fd:fd.name});
+  })));
+  setBc('Search: '+q,'');
+  if(!res.length){$('browseContent').innerHTML='<div class="empty"><div class="eico">🔍</div><h3>Koi result nahi</h3></div>';return}
+  $('browseContent').innerHTML=res.map(f=>`
+    <div class="fli" onclick="openF(${f.ci},${f.fi},${f.i})">
+      <div class="flico ${f.type}">${f.type==='video'?'🎬':'📄'}</div>
+      <div class="flinf"><div class="fln">${f.name}</div>
+      <div class="flm">${f.ch} › ${f.fd} · ${f.type.toUpperCase()} · ${f.size}</div></div>
+    </div>`).join('');
+}
+
+// ── PROGRESS ──
+function renderProg(){
+  const total=S.channels.reduce((a,ch)=>a+ch.folders.reduce((b,fd)=>b+fd.files.length,0),0);
+  const done=Object.values(S.prog).filter(p=>p.done).length;
+  const pct=total?Math.round(done/total*100):0;
+  if(!total){$('progressContent').innerHTML='<div class="empty"><div class="eico">📊</div><h3>Koi data nahi</h3><p>Pehle scan karo.</p></div>';return}
+  let html=`<div class="sgrid"><div class="st"><div class="sv">${total}</div><div class="sl">Total Files</div></div><div class="st"><div class="sv">${done}</div><div class="sl">Completed</div></div><div class="st"><div class="sv">${pct}%</div><div class="sl">Progress</div></div></div>`;
+  S.channels.forEach((ch,ci)=>{
+    if(!ch.folders.length)return;
+    html+=`<div class="pcrd"><h4>${ch.emoji||'📡'} ${ch.name}</h4>`;
+    ch.folders.forEach((fd,fi)=>{
+      const t=fd.files.length,d=fd.files.filter((_,i)=>S.prog[fk(ci,fi,i)]?.done).length,p=t?Math.round(d/t*100):0;
+      html+=`<div class="pr"><div class="prl">📂 ${fd.name}</div><div class="prt"><div class="prf" style="width:${p}%"></div></div><div class="prpct">${d}/${t}</div></div>`;
+    });
+    html+='</div>';
+  });
+  $('progressContent').innerHTML=html;
+}
+
+function sv(v,btn){S.vm=v;document.querySelectorAll('.vb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');if(S.afi>=0)renderFiles(S.aci,S.afi)}
+
+// ── KEYBOARD ──
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape')closeMod(null,true);
+  if($('ov').classList.contains('open')){
+    if(e.key==='ArrowRight')nextF();if(e.key==='ArrowLeft')prevF();if(e.key==='d')markDone();
+  }
+});
+
+// ── INIT ──
+loadProg();
+checkStatus();
+loadIndex();
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: study-portal
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn server:app --bind 0.0.0.0:$PORT --workers 1 --timeout 300
+    envVars:
+      - key: API_ID
+        sync: false
+      - key: API_HASH
+        sync: false
+      - key: BOT_TOKEN
+        sync: false
+      - key: CHANNELS
+        sync: false
+      - key: PYTHON_VERSION
+        value: 3.11.0

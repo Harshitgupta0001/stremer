@@ -1,0 +1,4 @@
+flask
+pyrogram
+tgcrypto
+gunicorn
